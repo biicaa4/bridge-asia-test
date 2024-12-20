@@ -1,3 +1,4 @@
+// lib/queries.ts
 import { supabase } from './supabaseClient';
 
 const mockPlayers = [
@@ -24,7 +25,7 @@ export async function addScore(name: string, score: number) {
 
 export async function getTopPlayers() {
   // Fetch top 10 players
-  let { data, error } = await supabase
+  const { data: initialData, error } = await supabase
     .from('leaderboard')
     .select('*')
     .order('score', { ascending: false })
@@ -33,7 +34,7 @@ export async function getTopPlayers() {
   if (error) throw error;
 
   // If no data, insert mock players and refetch
-  if (!data || data.length === 0) {
+  if (!initialData || initialData.length === 0) {
     const { error: insertError } = await supabase
       .from('leaderboard')
       .insert(mockPlayers);
@@ -48,12 +49,18 @@ export async function getTopPlayers() {
       .limit(10);
 
     if (refetchError) throw refetchError;
-    data = refetchData;
+
+    return refetchData.map((player, index) => ({
+      rank: index + 1,
+      name: player.name,
+      score: player.score,
+    }));
   }
 
-  return data?.map((player, index) => ({
+  // Map initial data if no insertion was required
+  return initialData.map((player, index) => ({
     rank: index + 1,
     name: player.name,
-    score: player.score
-  })) || [];
+    score: player.score,
+  }));
 }
