@@ -1,18 +1,21 @@
-import type { Config } from "tailwindcss";
-
-export default {
+module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#3300FF",
+      },
+      fontFamily: {
+        pressstart: ['"Press Start 2P"', 'cursive'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
+      backgroundImage: {
+        'main-gradient': `linear-gradient(145deg, #d6caf8 0%, #e2afaf 50%, #997fed 100%)`,
       },
     },
   },
   plugins: [],
-} satisfies Config;
+};
